@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css">
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style_l.css" media="screen and (orientation: landscape)">
+<link rel="stylesheet" type="text/css" href="style_p.css" media="screen and (orientation: portrait)">
+</head>
+
+<script type="text/javascript">  
+$(document).ready(function() {
+	// Increment Scores
+	$('.btn').click(function() {
+		mPlayer = $.trim( $(this).children().children().html() );	// Fetch Player
+		console.log(mPlayer);
+		Score.addPoint(mPlayer);
+		Score.update();
+		Score.checkWin();
+	});
+	
+	// Call Popup Max
+	$('#max').click(function() {
+		$('#max_score').val( Score.getMax() );
+		$('#popupMax').popup( "open" );
+		$('#max_score').focus();
+	});
+	
+	// Set Max
+	$('#set_max').click(function() {
+		Score.setMax( parseInt($('#max_score').val()) );
+		$('#lb_max').text( Score.getMax() );
+	});
+});
+
+Score = {};
+Score.Player1 = 0;
+Score.Player2 = 0;
+Score.Max = 21;
+
+Score.reset = function() {
+	Score.Player1 = 0;
+	Score.Player2 = 0;
+	Score.update();
+};
+
+Score.setMax = function(pMax) {
+	Score.Max = pMax;
+};
+
+Score.getMax = function() {
+	return Score.Max;
+};
+
+Score.addPoint = function(pPlayer) {
+	if ( pPlayer == $.trim('Player 1') )
+		Score.Player1++;
+	if ( pPlayer == $.trim('Player 2') )
+		Score.Player2++;
+};
+
+Score.update = function() {
+	$('#pl1').html( Score.Player1 );
+	$('#pl2').html( Score.Player2 );
+};
+
+Score.checkWin = function() {
+	if (Score.Player1 >= Score.Max) {
+		$('#winner').text( $('#pl_name1').text() );
+		$('#popupWin').popup( "open" );
+		Score.reset();
+	}
+	if (Score.Player2 >= Score.Max) {
+		$('#winner').text( $('#pl_name2').text() );
+		$('#popupWin').popup( "open" );
+		Score.reset();
+	}
+};
+</script>
+
+<style type="text/css">
+#winner {
+	color: 			#FFD700!important;
+}
+.txt-style {
+	/* Gold */
+	color: 			#FFD700!important;
+	font-family: 	"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-size: 		24px;
+	text-shadow:	3px 1px black;
+}
+.txt-flt-right {
+	float: right;
+}
+#background {
+	/* Background */
+	background: 	rgb(21,121,21); /* Old browsers */
+	background: 	-moz-radial-gradient(center, ellipse cover,  rgba(21,121,21,1) 0%, rgba(14,2,2,1) 100%); /* FF3.6+ */
+	background: 	-webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(21,121,21,1)), color-stop(100%,rgba(14,2,2,1))); /* Chrome,Safari4+ */
+	background: 	-webkit-radial-gradient(center, ellipse cover,  rgba(21,121,21,1) 0%,rgba(14,2,2,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: 	-o-radial-gradient(center, ellipse cover,  rgba(21,121,21,1) 0%,rgba(14,2,2,1) 100%); /* Opera 12+ */
+	background: 	-ms-radial-gradient(center, ellipse cover,  rgba(21,121,21,1) 0%,rgba(14,2,2,1) 100%); /* IE10+ */
+	background: 	radial-gradient(ellipse at center,  rgba(21,121,21,1) 0%,rgba(14,2,2,1) 100%); /* W3C */
+	filter: 		progid:DXImageTransform.Microsoft.gradient( startColorstr='#157915', endColorstr='#0e0202',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+</style>
+
+<body>
+
+<div id="2PlayerCounter" data-url="2Player Counter" data-role="page">
+	<div id="background" data-role="content">
+		<div id="popupWin" data-role="popup" data-theme="a">
+			<div style="padding:10px 20px;">
+				<h1 id="winner">none</h1>
+			</div>
+		</div>
+		<div id="popupMax" data-role="popup" data-theme="a">
+			<div style="padding:10px 20px;">
+				<input type="text" placeholder="set max_score" id="max_score">
+				
+				<a href="#" id="set_max" data-rel="back" data-role="button" data-icon="check" data-theme="e">Set</a>
+			</div>
+		</div>
+		
+		<div>
+			<a id="pl_name1" class="name txt-style">Player 1: <span id="pl1">0</span></a>
+			<a id="pl_name2" class="name txt-style txt-flt-right">Player 2: <span id="pl2">0</span></a>
+		</div>
+		<div>
+			<a href="#" class="btn btn-size btn-style" data-role="button">Player 1</a>
+			<a href="#" class="btn btn-flt-right btn-size btn-style" data-role="button">Player 2</a>
+		</div>
+		<div>
+			<a id="max" class="txt-style">Score Max: <span id="lb_max">21</span><a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
